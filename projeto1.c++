@@ -11,13 +11,13 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
             tabela[i][j] = max(tabela[i-1][j], tabela[i][j-1]); // inicializa a posicao com o maior dos vetores anteriores
 
             for (int k = 0; k < n; k++) { // itera as pecas
-                int ai = pieces[k][0];
-                int bi = pieces[k][1];
-                int pi = pieces[k][2];
+                int ai = pieces[k][0]; //X
+                int bi = pieces[k][1]; //Y
+                int pi = pieces[k][2]; //P
                 if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente normalmente
                 // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
-                    tabela[i][j] = max(tabela[i][j], tabela[i - ai][j - bi] + pi); 
-                }
+                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - bi] + pi,tabela[i-ai][j] + pi)); 
+                }   
                 if (i >= bi && j >= ai) { // se as pecas tem tamanho suficiente viradas
                     tabela[i][j] = max(tabela[i][j], tabela[i - bi][j - ai] + pi);
                 }
@@ -29,12 +29,12 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
 
 int main() {
     int X, Y, n;
-    cin >> X >> Y; // reads the variables for height and length
+    cin >> X >> Y; // reads the variables for length and height
     cin >> n; // reads the variable that represents the number of different pieces
 
     vector<vector<int>> pieces(n, vector<int>(3)); // builds a vector of vectors that contains information about all the pieces
     for (int i = 0; i < n; i++) {
-        cin >> pieces[i][0] >> pieces[i][1] >> pieces[i][2]; // reads the height, length and price of every piece
+        cin >> pieces[i][0] >> pieces[i][1] >> pieces[i][2]; // reads the length, height and price of every piece
     }
     int result = maximizeValue(X, Y, n, pieces); // calls the auxiliary function that calculates the best deal
     cout << result << endl; // prints to the terminal the answer
