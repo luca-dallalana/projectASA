@@ -7,12 +7,18 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
     // fills the matrix (bottom-up method)
     for (int i = 1; i <= X; i++) { // somatorio
         for (int j = 1; j <= Y; j++) { // somatorio
+
+            tabela[i][j] = max(tabela[i-1][j], tabela[i][j-1]); // inicializa a posicao com o maior dos vetores anteriores
+
             for (int k = 0; k < n; k++) { // itera as pecas
                 int ai = pieces[k][0];
                 int bi = pieces[k][1];
                 int pi = pieces[k][2];
-                if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente 
+                if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente normalmente
                     tabela[i][j] = max(tabela[i][j], tabela[i - ai][j - bi] + pi);
+                }
+                if (i >= bi && j >= ai) { // se as pecas tem tamanho suficiente viradas
+                    tabela[i][j] = max(tabela[i][j], tabela[i - bi][j - ai] + pi);
                 }
             }
         }
