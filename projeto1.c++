@@ -22,7 +22,9 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
                     tabela[i][j] = max(tabela[i][j], max(tabela[i][j - ai] + pi,tabela[i-bi][j] + pi));
                 }
             }
+            cout << tabela[i][j] << " ";
         }
+        cout << endl;
     }
     return tabela[X][Y]; // o resultado optimo e o resultado final da tabela
 }
