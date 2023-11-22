@@ -15,7 +15,8 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
                 int bi = pieces[k][1];
                 int pi = pieces[k][2];
                 if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente normalmente
-                    tabela[i][j] = max(tabela[i][j], tabela[i - ai][j - bi] + pi);
+                // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
+                    tabela[i][j] = max(tabela[i][j], tabela[i - ai][j - bi] + pi); 
                 }
                 if (i >= bi && j >= ai) { // se as pecas tem tamanho suficiente viradas
                     tabela[i][j] = max(tabela[i][j], tabela[i - bi][j - ai] + pi);
