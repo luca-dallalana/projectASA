@@ -33,7 +33,7 @@ int main() {
     int X, Y, n;
     cin >> X >> Y; // reads the variables for length and height
     cin >> n; // reads the variable that represents the number of different pieces
-    if(X == 0 || Y == 0 || n == 0){
+    if(X < 1 || Y < 1 || n < 1){
         return 0;
     }
     vector<vector<int>> pieces(n, vector<int>(3)); // builds a vector of vectors that contains information about all the pieces
