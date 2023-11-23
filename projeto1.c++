@@ -8,7 +8,7 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
     for (int length = 1; length <= X; length++) { // somatorio
         for (int height = 1; height <= Y; height++) { // somatorio
 
-            tabela[length][height] = max(tabela[length-1][height], tabela[length][height-1]); // inicializa a posicao com o maior dos vetores anteriores
+            tabela[length][height] = tabela[length][height-1]; // inicializa a posicao com o maior dos vetores anteriores
 
             for (int k = 0; k < n; k++) { // itera as pecas
                 int ai = pieces[k][0]; // X
