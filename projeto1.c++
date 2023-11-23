@@ -5,21 +5,21 @@ using namespace std;
 int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receives the pointer to the vector
     vector<vector<int>> tabela(X + 1, vector<int>(Y + 1, 0)); // vetor de tamanho X+1 que contem vetores de tamanho Y+1
     // fills the matrix (bottom-up method)
-    for (int i = 1; i <= X; i++) { // somatorio
-        for (int j = 1; j <= Y; j++) { // somatorio
+    for (int length = 1; length <= X; length++) { // somatorio
+        for (int height = 1; height <= Y; height++) { // somatorio
 
-            tabela[i][j] = max(tabela[i-1][j], tabela[i][j-1]); // inicializa a posicao com o maior dos vetores anteriores
+            tabela[length][height] = max(tabela[length-1][height], tabela[length][height-1]); // inicializa a posicao com o maior dos vetores anteriores
 
             for (int k = 0; k < n; k++) { // itera as pecas
                 int ai = pieces[k][0]; // X
                 int bi = pieces[k][1]; // Y
                 int pi = pieces[k][2]; // P
-                if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente normalmente
+                if (length >= ai && height >= bi) { // se as pecas tem tamanho suficiente normalmente
                 // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
-                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - bi] + pi + tabela[i - ai][bi],tabela[i-ai][j] + pi + tabela[ai][j - bi])); 
+                    tabela[length][height] = max(tabela[length][height], max(tabela[length][height - bi] + pi + tabela[length - ai][bi],tabela[length-ai][height] + pi + tabela[ai][height - bi])); 
                 }   
-                if (i >= bi && j >= ai) { // se as pecas tem tamanho suficiente viradas
-                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - ai] + pi + tabela[i - bi][ai],tabela[i-bi][j] + pi + tabela[bi][j - ai]));
+                if (length >= bi && height >= ai) { // se as pecas tem tamanho suficiente viradas
+                    tabela[length][height] = max(tabela[length][height], max(tabela[length][height - ai] + pi + tabela[length - bi][ai],tabela[length-bi][height] + pi + tabela[bi][height - ai]));
                 }
             }
     
