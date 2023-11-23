@@ -1,19 +1,27 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-// compile g++ -std=c++11 -O3 -Wall projeto1.c++ -lm ./a.out
-int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receives the pointer to the vector
+// compile g++ -std=c++11 -O3 -Wall projeto1.cpp -lm ./a.out
+
+struct Piece
+{
+    int length;
+    int height;
+    int price;
+};
+
+int maximizeValue(int X, int Y, int n, const Piece pieces[]) { // receives the pointer to the vector
     vector<vector<int>> tabela(X + 1, vector<int>(Y + 1, 0)); // vetor de tamanho X+1 que contem vetores de tamanho Y+1
     // fills the matrix (bottom-up method)
     for (int length = 1; length <= X; length++) { // somatorio
         for (int height = 1; height <= Y; height++) { // somatorio
-
+            
             tabela[length][height] = tabela[length][height-1]; // inicializa a posicao com o maior dos vetores anteriores
 
             for (int k = 0; k < n; k++) { // itera as pecas
-                int ai = pieces[k][0]; // X
-                int bi = pieces[k][1]; // Y
-                int pi = pieces[k][2]; // P
+                int ai = pieces[k].length; // X
+                int bi = pieces[k].height; // Y
+                int pi = pieces[k].price; // P
                 if (length >= ai && height >= bi) { // se as pecas tem tamanho suficiente normalmente
                 // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
                     tabela[length][height] = max(tabela[length][height], max(tabela[length][height - bi] + pi + tabela[length - ai][bi],tabela[length-ai][height] + pi + tabela[ai][height - bi])); 
@@ -36,9 +44,9 @@ int main() {
     if(X < 1 || Y < 1 || n < 1){
         return 0;
     }
-    vector<vector<int>> pieces(n, vector<int>(3)); // builds a vector of vectors that contains information about all the pieces
+    Piece pieces[n];
     for (int i = 0; i < n; i++) {
-        cin >> pieces[i][0] >> pieces[i][1] >> pieces[i][2]; // reads the length, height and price of every piece
+        cin >> pieces[i].length >> pieces[i].height >> pieces[i].price; // reads the length, height and price of every piece
     }
     int result = maximizeValue(X, Y, n, pieces); // calls the auxiliary function that calculates the best deal
     cout << result << endl; // prints to the terminal the answer
