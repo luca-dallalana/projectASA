@@ -16,15 +16,15 @@ int maximizeValue(int X, int Y, int n, vector<vector<int>>& pieces) { // receive
                 int pi = pieces[k][2]; // P
                 if (i >= ai && j >= bi) { // se as pecas tem tamanho suficiente normalmente
                 // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
-                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - bi] + pi,tabela[i-ai][j] + pi)); 
+                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - bi] + pi + tabela[i - ai][bi],tabela[i-ai][j] + pi + tabela[ai][j - bi])); 
                 }   
                 if (i >= bi && j >= ai) { // se as pecas tem tamanho suficiente viradas
-                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - ai] + pi,tabela[i-bi][j] + pi));
+                    tabela[i][j] = max(tabela[i][j], max(tabela[i][j - ai] + pi + tabela[i - bi][ai],tabela[i-bi][j] + pi + tabela[bi][j - ai]));
                 }
             }
-            cout << tabela[i][j] << " ";
+    
         }
-        cout << endl;
+      
     }
     return tabela[X][Y]; // o resultado optimo e o resultado final da tabela
 }
