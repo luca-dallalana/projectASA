@@ -3,36 +3,21 @@
 using namespace std;
 // compile g++ -std=c++11 -O3 -Wall projeto1.cpp -lm ./a.out
 
-struct Piece
-{
-    int length;
-    int height;
-    int price;
-};
-
-int maximizeValue(int X, int Y, int n, const Piece pieces[]) { // receives the pointer to the vector
+int maximizeValue(int X, int Y, vector<vector<int>> pieceValues) { // receives the pointer to the vector
     vector<vector<int>> tabela(X + 1, vector<int>(Y + 1, 0)); // vetor de tamanho X+1 que contem vetores de tamanho Y+1
-    // fills the matrix (bottom-up method)
+    // fills the matrix (bottom-up method)  
     for (int length = 1; length <= X; length++) { // somatorio
         for (int height = 1; height <= Y; height++) { // somatorio
             
-            tabela[length][height] = tabela[length][height-1]; // inicializa a posicao com o maior dos vetores anteriores
-
-            for (int k = 0; k < n; k++) { // itera as pecas
-                int ai = pieces[k].length; // X
-                int bi = pieces[k].height; // Y
-                int pi = pieces[k].price; // P
-                if (length >= ai && height >= bi) { // se as pecas tem tamanho suficiente normalmente
-                // max entre valor de uma peca previa ou o valor da area sem a peca mais o valor da peca
-                    tabela[length][height] = max(tabela[length][height], max(tabela[length][height - bi] + pi + tabela[length - ai][bi],tabela[length-ai][height] + pi + tabela[ai][height - bi])); 
-                }   
-                if (length >= bi && height >= ai) { // se as pecas tem tamanho suficiente viradas
-                    tabela[length][height] = max(tabela[length][height], max(tabela[length][height - ai] + pi + tabela[length - bi][ai],tabela[length-bi][height] + pi + tabela[bi][height - ai]));
-                }
+            tabela[length][height] = pieceValues[length][height]; // inicializa a posicao com o maior dos vetores anteriores
+            
+            for (int lengthPiece = 1; lengthPiece < length; lengthPiece++){ 
+                tabela[length][height] = max(tabela[length][height], tabela[length - lengthPiece][height] + tabela[lengthPiece][height]);
             }
-    
+            for (int heightPiece = 1; heightPiece < height; heightPiece++){
+                tabela[length][height] = max(tabela[length][height], tabela[length][height - heightPiece] + tabela[length][heightPiece]);
+            }
         }
-      
     }
     return tabela[X][Y]; // o resultado optimo e o resultado final da tabela
 }
@@ -44,11 +29,18 @@ int main() {
     if(X < 1 || Y < 1 || n < 1){
         return 0;
     }
-    Piece pieces[n];
+    int pieceLength, pieceHeight, piecePrice;
+    vector<vector<int>> pieceValues(X+1, vector<int>(Y+1, 0));
     for (int i = 0; i < n; i++) {
-        cin >> pieces[i].length >> pieces[i].height >> pieces[i].price; // reads the length, height and price of every piece
+        cin >> pieceLength >> pieceHeight >> piecePrice; // reads the length, height and price of every piece
+        if (pieceLength <= X && pieceHeight <= Y){
+            pieceValues[pieceLength][pieceHeight] = piecePrice;
+        }
+        if (pieceHeight <= X && pieceLength <= Y ){
+            pieceValues[pieceHeight][pieceLength] = piecePrice;
+        }
     }
-    int result = maximizeValue(X, Y, n, pieces); // calls the auxiliary function that calculates the best deal
+    int result = maximizeValue(X, Y,pieceValues ); // calls the auxiliary function that calculates the best deal
     cout << result << endl; // prints to the terminal the answer
 
     return 0;
