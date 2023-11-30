@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <vector>
 using namespace std;
 // compile g++ -std=c++11 -O3 -Wall projeto1.cpp -lm ./a.out
@@ -24,15 +25,15 @@ int maximizeValue(int X, int Y, vector<vector<int>> pieceValues) { // receives t
 
 int main() {
     int X, Y, n;
-    cin >> X >> Y; // reads the variables for length and height
-    cin >> n; // reads the variable that represents the number of different pieces
+    scanf("%d %d", &X, &Y); // reads the variables for length and height
+    scanf("%d", &n); // reads the variable that represents the number of different pieces
     if(X < 1 || Y < 1 || n < 1){
         return 0;
     }
     int pieceLength, pieceHeight, piecePrice;
     vector<vector<int>> pieceValues(X+1, vector<int>(Y+1, 0));
     for (int i = 0; i < n; i++) {
-        cin >> pieceLength >> pieceHeight >> piecePrice; // reads the length, height and price of every piece
+        scanf("%d %d %d", &pieceLength, &pieceHeight, &piecePrice); // reads the length, height and price of every piece
         if (pieceLength <= X && pieceHeight <= Y){
             pieceValues[pieceLength][pieceHeight] = piecePrice;
         }
@@ -41,7 +42,7 @@ int main() {
         }
     }
     int result = maximizeValue(X, Y,pieceValues ); // calls the auxiliary function that calculates the best deal
-    cout << result << endl; // prints to the terminal the answer
+    printf("%d\n", result); // prints to the terminal the answer
 
     return 0;
 }
