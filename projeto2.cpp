@@ -10,7 +10,7 @@ int main(){
     int people, relationships;
     scanf("%d %d", &people, &relationships); 
 
-    if (pow(relationships,2) < relationships + people ){
+    if (pow(people,2) > people + relationships ){
         vector<vector<int>> adjacencyList(people + 1);
 
         for (int i = 0; i < relationships; i++){
