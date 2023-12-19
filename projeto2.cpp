@@ -7,14 +7,67 @@ using namespace std;
 
 // g++ -std=c++11 -O3 -Wall projeto2.cpp -lm ./a.out
 
+int DFST(vector<vector<int>>& adjacencyListTransposta, list<int>& visited, int people){ // DFS para o grafo transposto com ligeiras alteracoes face a DFS original
+    vector<int> valueAtVertice(people+1,0); // vetor que grava o valor maximo que pode se atingir ao chegar num dito vertice
+    int jumps = 0;
+    // Algoritmo regular DFS
+    vector<string> colors(people +1, "White");
+    list<int> visit;
+    int currentV;
+    for (int v : visited){ // percorre todos os vertices pela ordem do tempo de fim dada pela 1 DFS
+        if (colors[v] == "White"){
+            vector<int> SCCs;
+            int max = 0;
+            visit.push_front(v); // adiciona a lista dos a procurar
+            while (!visit.empty()){
+                currentV = visit.front();
+                colors[currentV] = "Gray";
+                for (int adjacentV : adjacencyListTransposta[currentV]){
+                    if (adjacentV != 0){ // Se houver v adjacente
+                        if (colors[adjacentV] == "White"){ // Se ainda nao foi visitado
+                            colors[adjacentV] = "Gray"; // Passa a ser visitado mas nao fechado ainda maybe redundante
+                            visit.push_front(adjacentV);
+                            break; // Para nao procurar pelos outros adjacentes, enquanto nao acaba o "ramo da arvore"
+                        }
+                        if (colors[adjacentV] == "Black"){
+                            if (valueAtVertice[currentV] < valueAtVertice[adjacentV] + 1){
+                                valueAtVertice[currentV] = valueAtVertice[adjacentV] + 1;
+                                if (max < valueAtVertice[currentV]){
+                                    max = valueAtVertice[currentV];
+                                } 
+                            }
+                        }
+                    }
+                    else{
+                        SCCs.push_back(currentV);
+                        visit.pop_front();
+                        break;
+                    }
+                }
+            }
+            for (int SCC : SCCs){
+                valueAtVertice[SCC] = max;
+                colors[SCC] = "Black";
+            }
+            if (jumps < max){
+                jumps = max;
+            }
+        }
+    } 
+    return jumps;
+}
+
+
+
+
 list<int> DFS(vector<vector<int>>& adjacencyList, int people){
     vector<string> colors(people +1, "White");
     list<int> visit;
     list<int> visited;
     int currentV;
-    for (int i = 1; i <= people; i++){ // percorre todos os vertices
-        if (colors[i] == "White"){
-            visit.push_front(i); // adiciona a lista dos a procurar
+    for (int v = 1; v <= people; v++){ // percorre todos os vertices
+        if (colors[v] == "White"){
+            visit.push_front(v); // adiciona a lista dos a procurar
             while (!visit.empty()){
                 currentV = visit.front();
                 colors[currentV] = "Gray"; // maybe redundante
@@ -42,7 +95,7 @@ list<int> DFS(vector<vector<int>>& adjacencyList, int people){
         }
         
     }
-    
+    return visited;
 }
 
 int main(){
@@ -50,7 +103,6 @@ int main(){
     scanf("%d %d", &people, &relationships); 
     vector<vector<int>> adjacencyList(people + 1);
     vector<vector<int>> adjacencyListTransposta(people + 1);
-    int jumps = 0;
     for (int i = 0; i < relationships; i++){ // cria a lista de adjacencia do grafo normal e do grafo transposto (grafo transposto serve pra decobrir SCCs)
         int person1, person2;
         scanf("%i %i", &person1, &person2);
@@ -62,6 +114,8 @@ int main(){
         adjacencyListTransposta[i].push_back(0);
     }
     
-
+    list<int> visited = DFS(adjacencyList, people);
+    int jumps = DFST(adjacencyListTransposta, visited, people);
+    printf("%d", jumps);
     return 0;
 }
