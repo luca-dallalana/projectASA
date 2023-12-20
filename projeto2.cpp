@@ -7,9 +7,8 @@ using namespace std;
 
 // g++ -std=c++11 -O3 -Wall projeto2.cpp -lm ./a.out
 
-int DFST(vector<vector<int>>& adjacencyListTransposta, list<int>& visited, int people){ // DFS para o grafo transposto com ligeiras alteracoes face a DFS original
+vector<int> DFST(vector<vector<int>>& adjacencyListTransposta, list<int>& visited, int people){ // DFS para o grafo transposto com ligeiras alteracoes face a DFS original
     vector<int> valueAtVertice(people+1,0); // vetor que grava o valor maximo que pode se atingir ao chegar num dito vertice
-    int jumps = 0;
     // Algoritmo regular DFS
     vector<string> colors(people +1, "White");
     list<int> visit;
@@ -29,36 +28,30 @@ int DFST(vector<vector<int>>& adjacencyListTransposta, list<int>& visited, int p
                             visit.push_front(adjacentV);
                             break; // Para nao procurar pelos outros adjacentes, enquanto nao acaba o "ramo da arvore"
                         }
-                        if (colors[adjacentV] == "Black"){
-                            if (valueAtVertice[currentV] < valueAtVertice[adjacentV] + 1){
+                        if (colors[adjacentV] == "Black"){ // Verifica se o vertice ja esta fechado
+                            if (valueAtVertice[currentV] < valueAtVertice[adjacentV] + 1){ // Verifica se o caminho ate o vertice atual e menor do que a um adjacente +1
                                 valueAtVertice[currentV] = valueAtVertice[adjacentV] + 1;
-                                if (max < valueAtVertice[currentV]){
+                                if (max < valueAtVertice[currentV]){ // no caso de ser um SCC com mais de um vertice, precisamos de saber o maior valor, pois todos os vertices partilharam esse valor
                                     max = valueAtVertice[currentV];
                                 } 
                             }
                         }
                     }
                     else{
-                        SCCs.push_back(currentV);
+                        SCCs.push_back(currentV); // adiciona 
                         visit.pop_front();
                         break;
                     }
                 }
             }
             for (int SCC : SCCs){
-                valueAtVertice[SCC] = max;
+                valueAtVertice[SCC] = max; // atualiza todos os vertices de um SCC
                 colors[SCC] = "Black";
-            }
-            if (jumps < max){
-                jumps = max;
             }
         }
     } 
-    return jumps;
+    return valueAtVertice;
 }
-
-
-
 
 list<int> DFS(vector<vector<int>>& adjacencyList, int people){
     vector<string> colors(people +1, "White");
@@ -98,6 +91,16 @@ list<int> DFS(vector<vector<int>>& adjacencyList, int people){
     return visited;
 }
 
+int jumps(vector<int>& possiblePaths){
+    int max = 0;
+    for(int v : possiblePaths){
+        if (v > max){
+            max = v;
+        }
+    }
+    return max;
+}
+
 int main(){
     int people, relationships;
     scanf("%d %d", &people, &relationships); 
@@ -115,7 +118,8 @@ int main(){
     }
     
     list<int> visited = DFS(adjacencyList, people);
-    int jumps = DFST(adjacencyListTransposta, visited, people);
-    printf("%d", jumps);
+    vector<int> possiblePaths = DFST(adjacencyListTransposta, visited, people);
+    int maxPath = jumps(possiblePaths);
+    printf("%d\n", maxPath);
     return 0;
 }
