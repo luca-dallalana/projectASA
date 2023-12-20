@@ -1,5 +1,4 @@
 import pulp
-
 brinquedosDiferentes, pacotes, maxBrinquedos = [int(entrada) for entrada in input().split()]
 infoBrinquedos = []
 for i in range(brinquedosDiferentes):
